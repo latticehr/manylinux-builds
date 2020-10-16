@@ -18,7 +18,7 @@ if [ -z "$NUMPY_VERSIONS" ]; then
 
 fi
 
-CYTHON_VERSION=0.21.2
+CYTHON_VERSION=0.29.4
 
 # Get blas / lapack
 get_blas

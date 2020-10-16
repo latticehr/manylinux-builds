@@ -47,7 +47,9 @@ for PYTHON in ${PYTHON_VERSIONS}; do
             [ $(lex_ver $SCIPY) -lt $(lex_ver 0.12) ] ; then
             continue
         fi
-        if [ $(lex_ver $PYTHON) -ge $(lex_ver 3.5) ]; then
+	if [ -n "$NUMPY_VERSION" ]; then
+	    $PIPI_IO "numpy==$NUMPY_VERSION"
+        elif [ $(lex_ver $PYTHON) -ge $(lex_ver 3.5) ]; then
             $PIPI_IO "numpy==1.9.0"
         elif [ $(lex_ver $PYTHON) -ge $(lex_ver 3) ] ||
             [ $(lex_ver $SCIPY) -ge $(lex_ver 0.17) ] ; then
@@ -58,7 +60,7 @@ for PYTHON in ${PYTHON_VERSIONS}; do
         if [ $(lex_ver $SCIPY) -lt $(lex_ver 0.14.1) ] ; then
             $PIPI_IO "cython==0.20.2"
         else
-            $PIPI_IO "cython==0.24"
+            $PIPI_IO "cython==0.29.4"
         fi
         echo "Building scipy $SCIPY for Python $PYTHON"
         git clean -fxd

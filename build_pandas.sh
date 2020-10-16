@@ -23,8 +23,11 @@ rm_mkdir unfixed_wheels
 # Compile wheels
 for PYTHON in ${PYTHON_VERSIONS}; do
     PIP="$(cpython_path $PYTHON $UNICODE_WIDTH)/bin/pip"
+    PIPI_IO="$PIP install -f $WHEELHOUSE -f $MANYLINUX_URL"
     for PANDAS in ${PANDAS_VERSIONS}; do
-        if [ $(lex_ver $PYTHON) -ge $(lex_ver 3.5) ] ; then
+	if [ -n "$NUMPY_VERSION" ]; then
+	    np_ver=$NUMPY_VERSION
+        elif [ $(lex_ver $PYTHON) -ge $(lex_ver 3.5) ] ; then
             np_ver=1.9.0
         elif [ $(lex_ver $PYTHON) -ge $(lex_ver 3) ] ||
             [ $(lex_ver $PANDAS) -ge $(lex_ver 0.15) ] ; then
@@ -35,9 +38,9 @@ for PYTHON in ${PYTHON_VERSIONS}; do
         echo "Building pandas $PANDAS for Python $PYTHON"
         # Put numpy version into the wheelhouse to avoid rebuilding
         $PIP wheel -f $WHEELHOUSE -f $MANYLINUX_URL -w tmp "numpy==$np_ver"
-        $PIP install -f tmp "numpy==$np_ver"
+
         # Add numpy to requirements to avoid upgrading numpy version
-        $PIP wheel -f tmp -w unfixed_wheels "numpy==$np_ver" "pandas==$PANDAS"
+        $PIP wheel -f tmp -w unfixed_wheels "numpy==$np_ver" "pandas==$PANDAS" --no-binary=pandas
     done
 done
 
